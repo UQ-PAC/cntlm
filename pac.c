@@ -19,6 +19,7 @@
  *
  */
 
+#ifdef ENABLE_PAC
 #include <netdb.h>
 #include <ifaddrs.h>
 #include "duktape/duktape.h"
@@ -201,3 +202,5 @@ void pac_cleanup(void) {
         pac_ctx = NULL;
     }
 }
+
+#endif

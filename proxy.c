@@ -19,6 +19,7 @@
  *
  */
 
+#include <assert.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -425,6 +426,7 @@ int proxy_connect(struct auth_s *credentials, const char* url, const char* hostn
 	paclist_t paclist = NULL;
 	const char *pacp_str;
 	if (pac_initialized) {
+		#ifdef ENABLE_PAC
 		/*
 		 * Create proxy list for request from PAC file.
 		 */
@@ -436,6 +438,9 @@ int proxy_connect(struct auth_s *credentials, const char* url, const char* hostn
 		proxylist = paclist->proxylist;
 		proxycurr = paclist->proxycurr;
 		proxycount = paclist->count;
+		#else
+		assert(false); // pac disabled
+		#endif
 	} else {
 		proxylist = parent_list;
 		proxycurr = parent_curr;

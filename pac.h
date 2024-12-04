@@ -19,6 +19,7 @@
  *
  */
 
+#ifdef ENABLE_PAC
 #ifndef _PAC_H
 #define _PAC_H
 
@@ -61,4 +62,5 @@ const char *pac_find_proxy(const char *url,            // URL to find proxy for
 /// This function should be called once you're done with using pac engine.
 void pac_cleanup(void);
 
+#endif
 #endif

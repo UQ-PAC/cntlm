@@ -65,6 +65,7 @@
 #include "forward.h"				/* code serving via parent proxy */
 #include "direct.h"				/* code serving directly without proxy */
 #include "proxy.h"
+
 #include "pac.h"
 #ifdef __CYGWIN__
 #include "sspi.h"				/* code for SSPI management */
@@ -776,6 +777,7 @@ int main(int argc, char **argv) {
 			case 'd':
 				strlcpy(cdomain, optarg, MINIBUF_SIZE);
 				break;
+			#ifdef ENABLE_PAC
 			case 'x':
 				pac = 1;
 				/*
@@ -788,6 +790,7 @@ int main(int argc, char **argv) {
 					myexit(1);
 				}
 				break;
+			#endif
 			case 'F':
 				cflags = swap32(strtoul(optarg, &tmp, 0));
 				break;
@@ -1019,8 +1022,10 @@ int main(int argc, char **argv) {
 		fprintf(stream, "\t-v  Print debugging information.\n");
 		fprintf(stream, "\t-w  <workstation>\n"
 				"\t    Some proxies require correct NetBIOS hostname.\n");
+		#ifdef ENABLE_PAC
 		fprintf(stream, "\t-x  <PAC_file>\n"
 				"\t    Specify a PAC file to load.\n");
+		#endif
 		fprintf(stream, "\t-X  <sspi_handle_type>\n"
 				"\t    Use SSPI with specified handle type. Works only under Windows.\n"
 				"\t    Default is negotiate.\n");
@@ -1180,10 +1185,15 @@ int main(int argc, char **argv) {
 		/*
 		 * Check if PAC file is defined.
 		 */
+		#ifdef ENABLE_PAC
 		CFG_DEFAULT(cf, "Pac", pac_file, PATH_MAX)
 		if (*pac_file) {
 			pac = 1;
 		}
+		#else
+		pac = 0;
+		#endif
+
 
 		/*
 		 * Add the rest of parent proxies.
@@ -1313,12 +1323,16 @@ int main(int argc, char **argv) {
 		fclose(test_fd);
 
 		/* Initiailize Pac. */
+		#ifdef ENABLE_PAC
 		pac_init();
 		pac_parse_file(pac_file);
 		if (debug)
 			printf("Pac initialized with PAC file %s\n", pac_file);
 		// TODO handle parsing errors from pac
 		pac_initialized = 1;
+		#else
+		pac_initialized = 0;
+		#endif
 	}
 
 	if (!interactivehash && !parent_available() && !pac)
@@ -1814,10 +1828,12 @@ int main(int argc, char **argv) {
 	}
 
 bailout:
+	#ifdef ENABLE_PAC
 	if (pac_initialized) {
 		pac_initialized = 0;
 		pac_cleanup();
 	}
+	#endif
 
 	free(pac_file);
 
