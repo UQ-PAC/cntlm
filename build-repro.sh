@@ -11,24 +11,19 @@ $CONT start
 # cp build/cntlm-noduk package/cntlm-noduk-musl
 # cp build/cntlm-duk package/cntlm-duk-musl
 
-names=(
-  cntlm-noduk-musl
-  cntlm-duk-musl
-)
-
-for NAME in $names; do
-  cd package
+cd package
+list='cntlm-noduk-musl cntlm-duk-musl'
+for NAME in $list; do
   $CONT aarch64-unknown-linux-musl-readelf $NAME -s -r -W > $NAME.relf
   $CONT bap -d adt:$NAME.adt -d bir:$NAME.bir $NAME 
   $CONT ddisasm $NAME --ir $NAME.gtirb 
   $CONT gtirb-semantics $NAME.gtirb $NAME.gts
-  rm $NAME.gtirb
 done
 
-$CONT md5sum * > checksum.md5
+#md5sum $(ls | grep -v '.md5') > checksum.md5
+
+md5sum -c checksum.md5
 echo "Created from $(git remote get-url origin) $(git show-ref HEAD)" > readme.txt
 
-
-
-
+cd ..
 $CONT stop
