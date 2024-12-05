@@ -25,6 +25,7 @@ target_compile_options(cntlm-noduk PUBLIC ${compileoptions})
 
 if (ENABLE_DUK) 
   add_library(duktape duktape/duktape.c)
+  target_link_libraries(duktape m)
   add_executable(cntlm-duk)
   target_compile_options(cntlm-duk PUBLIC -DENABLE_PAC=1 ${compileoptions})
   target_sources(cntlm-duk PUBLIC pac.c ${sources})
