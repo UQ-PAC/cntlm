@@ -1,7 +1,16 @@
 #!/bin/bash
 
+export DOCKER_FLAKE='github:katrinafyi/pac-nix/ef9c23743bddd6cf8d6b656c460c572426b50c9a#basil-tools-docker'
+
+# run first:
+#   using https://github.com/UQ-PAC/BASIL/blob/e9ad1001fb08b91209728ebe30a74c84831f3c0f/src/test/make/docker-helper.sh
+#   export DOCKER_FLAKE='github:katrinafyi/pac-nix/ef9c23743bddd6cf8d6b656c460c572426b50c9a#basil-tools-docker'
+#   docker-helper.sh pull
+#   docker-helper.sh start
+
 ROOT=$(git rev-parse --show-toplevel)
-CONT=$ROOT/docker-helper.sh
+CONT=docker-helper.sh
+
 export CC="$CONT aarch64-unknown-linux-gnu-gcc"
 $CONT start
 rm -rf build
