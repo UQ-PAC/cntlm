@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export DOCKER_FLAKE='github:katrinafyi/pac-nix/ef9c23743bddd6cf8d6b656c460c572426b50c9a#basil-tools-docker'
+set -xe
 
 # run first:
 #   using https://github.com/UQ-PAC/BASIL/blob/e9ad1001fb08b91209728ebe30a74c84831f3c0f/src/test/make/docker-helper.sh
@@ -14,7 +15,7 @@ CONT=docker-helper.sh
 export CC="$CONT aarch64-unknown-linux-gnu-gcc"
 $CONT start
 rm -rf build
-cmake -B build . -DENABLE_DUK=1 
+cmake -B build . -DENABLE_DUK=1 -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 mkdir -p package
 cp build/cntlm-noduk package/cntlm-noduk

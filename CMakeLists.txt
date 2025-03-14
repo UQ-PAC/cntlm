@@ -12,7 +12,7 @@ message("version ${VER}")
 
 execute_process(COMMAND bash "-c" "cp ${CMAKE_CURRENT_SOURCE_DIR}/config/config-aarch.h ${CMAKE_CURRENT_SOURCE_DIR}/config/config.h")
 
-set (compileoptions -DVERSION="${VER}" -std=c99 -D__BSD_VISIBLE -D_ALL_SOURCE -D_XOPEN_SOURCE=600 -D_POSIX_C_SOURCE=200112 -D_ISOC99_SOURCE -D_REENTRANT -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_DARWIN_C_SOURCE)
+set (compileoptions -O3 -DVERSION="${VER}" -std=c99 -D__BSD_VISIBLE -D_ALL_SOURCE -D_XOPEN_SOURCE=600 -D_POSIX_C_SOURCE=200112 -D_ISOC99_SOURCE -D_REENTRANT -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_DARWIN_C_SOURCE)
 set (compileoptions ${compileoptions} -Wall -Wextra -pedantic -Wshadow -Wcast-qual -Wbad-function-cast -Wstrict-prototypes -Wno-overlength-strings -v)
 
 set(sources acl.c  auth.c  config.c  direct.c  forward.c  http.c  main.c  ntlm.c pages.c  proxy.c  scanner.c  socket.c  utils.c  xcrypt.c)
